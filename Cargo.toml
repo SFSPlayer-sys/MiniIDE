@@ -1,0 +1,29 @@
+[package]
+name = "MiniIDE"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
+flate2 = "1"
+
+[dependencies]
+wry = "0.57"
+tao = "0.37"
+rfd = { version = "0.15", default-features = false }
+flate2 = "1"
+vt100 = "0.16"
+ureq = { version = "2", default-features = false, features = ["native-tls", "gzip"] }
+native-tls = "0.2"
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+incremental = false
+overflow-checks = false
+debug = false
+debug-assertions = false
+rpath = false

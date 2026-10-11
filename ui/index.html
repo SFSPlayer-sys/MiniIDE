@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MiniIDE</title>
+<style>
+/*__STYLE__*/
+</style>
+<body>
+
+<div class="app">
+
+  <div class="toolbar">
+    <div class="logo">MiniIDE</div>
+
+    <button class="tbtn" data-act="file">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 2h5.6l3.4 3.4V14H3.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M9.1 2v3.4h3.4" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+      </svg><span data-i18n="file">文件</span>
+    </button>
+
+    <button class="tbtn" data-act="save">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <path d="M2.5 2.5h8.2L13.5 5.3v8.2h-11z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M5.5 2.5v4h5v-4" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+      </svg><span data-i18n="save">保存</span>
+    </button>
+
+    <div class="run-group">
+      <button class="tbtn primary" data-act="run">
+        <svg width="15" height="15" viewBox="0 0 16 16">
+          <path d="M4.5 3l8.5 5-8.5 5z" fill="currentColor"/>
+        </svg><span data-i18n="run">运行</span>
+      </button>
+      <button class="tbtn primary caret" data-act="runmenu" data-i18n-title="runMode" title="运行方式">
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <button class="tbtn" data-act="term">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <rect x="1.5" y="2.5" width="13" height="11" rx="1.2" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M4.2 6.2l2.4 1.9-2.4 1.9" stroke="currentColor" stroke-width="1.2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8.4 10.2h3.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg><span data-i18n="terminal">终端</span>
+    </button>
+
+    <button class="tbtn" data-act="debug">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="13" r="5" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M12 8V4.5M9.2 6.4L7.6 4.4M14.8 6.4l1.6-2M7 13H3.2M21 13h-3.8M9.2 19.6L7.6 21.6M14.8 19.6l1.6 2"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg><span data-i18n="dbg">调试</span>
+    </button>
+
+    <div class="spacer"></div>
+
+    <div class="spacer"></div>
+
+    <button class="tbtn" data-act="palette">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg><span data-i18n="cmd">命令</span>
+    </button>
+
+    <button class="tbtn" data-act="set" data-i18n-title="settings" title="设置">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M19.1 14.4a1.6 1.6 0 00.3 1.8l.1.1a1.9 1.9 0 11-2.7 2.7l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5v.2a1.9 1.9 0 11-3.8 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a1.9 1.9 0 11-2.7-2.7l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3.1a1.9 1.9 0 110-3.8h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a1.9 1.9 0 112.7-2.7l.1.1a1.6 1.6 0 001.8.3h.1a1.6 1.6 0 001-1.5V3.1a1.9 1.9 0 113.8 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a1.9 1.9 0 112.7 2.7l-.1.1a1.6 1.6 0 00-.3 1.8v.1a1.6 1.6 0 001.5 1h.2a1.9 1.9 0 110 3.8h-.1a1.6 1.6 0 00-1.5 1z"
+              stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      </svg><span data-i18n="settings">设置</span>
+    </button>
+  </div>
+
+  <div class="body">
+
+    <aside class="activity" id="activity">
+      <button class="act on" data-view="explorer" data-i18n-title="explorer" title="资源管理器">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 5.5a1.5 1.5 0 011.5-1.5h4l1.8 2h6.7A1.5 1.5 0 0118.5 7.5v10A1.5 1.5 0 0117 19H4.5A1.5 1.5 0 013 17.5z"
+                stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="act" data-view="search" data-i18n-title="search" title="搜索">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="act" data-view="outline" data-i18n-title="outline" title="大纲">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h4M4 12h9M4 18h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="17" cy="6" r="1.6" fill="currentColor"/>
+          <circle cx="19" cy="18" r="1.6" fill="currentColor"/>
+        </svg>
+      </button>
+      <button class="act" data-view="git" data-i18n-title="git" title="源代码管理">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="7" cy="6" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="7" cy="18" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17" cy="10" r="2.2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M7 8.2v7.6M9.2 6h3.3A2.5 2.5 0 0115 8.5V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="act" data-view="debug" data-i18n-title="dbg" title="运行和调试">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="13" r="5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 8V4.5M9.2 6.4L7.6 4.4M14.8 6.4l1.6-2M7 13H3.2M21 13h-3.8M9.2 19.6L7.6 21.6M14.8 19.6l1.6 2"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="act act-ai" data-view="ai" title="AI 聊天 (Ctrl+U)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </aside>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title" id="sideTitle" data-i18n="explorer">资源管理器</div>
+      <div class="tree" id="tree" tabindex="-1"></div>
+      <div class="view hidden" id="searchView">
+        <div class="search-box">
+          <input id="searchInput" data-i18n-ph="searchPh" placeholder="搜索" spellcheck="false" autocomplete="off">
+        </div>
+        <div class="search-opts">
+          <label><input type="checkbox" id="srRe"><span data-i18n="regex">正则</span></label>
+          <label><input type="checkbox" id="srCase"><span data-i18n="case">区分大小写</span></label>
+          <label><input type="checkbox" id="srWord"><span data-i18n="wholeWord">全词</span></label>
+        </div>
+        <div class="search-box">
+          <input id="replaceInput" data-i18n-ph="replacePh" placeholder="替换为" spellcheck="false" autocomplete="off">
+        </div>
+        <div class="search-opts">
+          <button class="sr-btn" id="srReplaceOne" data-i18n="replaceOne">替换</button>
+          <button class="sr-btn" id="srReplaceAll" data-i18n="replaceAll">全部替换</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="view hidden" id="outlineView">
+        <div class="outline-list" id="outlineList"></div>
+      </div>
+      <div class="view hidden" id="gitView">
+        <div class="git-head">
+          <span class="git-branch" id="gitBranch"></span>
+          <span class="git-ab" id="gitAb"></span>
+          <button class="git-icon" id="gitRefresh" data-i18n-title="refresh" title="刷新">⟳</button>
+        </div>
+        <div class="git-commit">
+          <textarea id="gitMsg" rows="2" spellcheck="false" data-i18n-ph="gitMsgPh" placeholder="提交信息"></textarea>
+          <button class="sr-btn" id="gitCommit" data-i18n="gitCommit">提交</button>
+        </div>
+        <div class="git-actions">
+          <button class="git-act" id="gitPull" data-i18n="gitPull">拉取</button>
+          <button class="git-act" id="gitPush" data-i18n="gitPush">推送</button>
+        </div>
+        <div class="git-list" id="gitList"></div>
+      </div>
+      <div class="view hidden" id="debugView">
+        <div class="dbg-bar">
+          <select id="dbgConf" title="调试配置"></select>
+        </div>
+        <div class="dbg-bar">
+          <button class="dbg-run" id="dbgStartBtn">
+            <svg width="12" height="12" viewBox="0 0 16 16"><path d="M4.5 3l8.5 5-8.5 5z" fill="currentColor"/></svg>
+            <span data-i18n="dbgStart">开始调试</span>
+          </button>
+          <button class="dbg-stop" id="dbgStopBtn" data-i18n-title="dbgStop" title="停止">
+            <svg width="12" height="12" viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="dbg-tools" id="dbgTools">
+          <button class="dbg-ic" id="dbgContinue" data-i18n-title="dbgContinue" title="继续">⏵</button>
+          <button class="dbg-ic" id="dbgNext" data-i18n-title="dbgNext" title="单步跳过">⤼</button>
+          <button class="dbg-ic" id="dbgStepIn" data-i18n-title="dbgStepIn" title="单步进入">⤓</button>
+          <button class="dbg-ic" id="dbgStepOut" data-i18n-title="dbgStepOut" title="单步跳出">⤒</button>
+          <button class="dbg-ic" id="dbgPause" data-i18n-title="dbgPause" title="暂停">⏸</button>
+          <button class="dbg-ic" id="dbgRestart" data-i18n-title="dbgRestart" title="重启调试">⟳</button>
+        </div>
+        <div class="dbg-sec-h" data-i18n="dbgBps">断点</div>
+        <div class="dbg-list" id="dbgBps"></div>
+        <div class="dbg-sec-h" data-i18n="dbgWatch">监视</div>
+        <div class="dbg-list" id="dbgWatch"></div>
+        <input class="dbg-add" id="dbgWatchInput" data-i18n-ph="dbgWatchPh" placeholder="添加监视表达式（回车）" spellcheck="false" autocomplete="off">
+      </div>
+    </aside>
+
+    <div class="vhandle" id="vhandle"></div>
+
+    <main class="content">
+
+      <div class="tabbar">
+        <div class="tabs" id="tabs"></div>
+        <button class="tab-run hidden" id="tabRun" data-i18n-title="run" title="运行">
+          <svg width="12" height="12" viewBox="0 0 16 16">
+            <path d="M4.5 3l8.5 5-8.5 5z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="welcome" id="welcome">
+        <div class="wel-title">MiniIDE</div>
+        <div class="wel-group" data-i18n="welStart">开始</div>
+        <button class="wel-act" id="welOpen" data-i18n="openFolder">打开文件夹</button>
+        <button class="wel-act" id="welNew" data-i18n="newProject">新建项目</button>
+      </div>
+
+      <div class="editor">
+        <div class="gutter"><div class="gutter-inner" id="gutter"></div></div>
+        <div class="code-area">
+          <pre class="highlight" id="hl"></pre>
+          <textarea id="input" spellcheck="false" autocomplete="off"
+                    autocorrect="off" autocapitalize="off" wrap="off"></textarea>
+        </div>
+        <div class="find-bar hidden" id="findBar">
+          <div class="find-row">
+            <input id="findInput" data-i18n-ph="findPh" placeholder="查找" spellcheck="false" autocomplete="off">
+            <span class="find-count" id="findCount"></span>
+            <button class="fb-btn" id="findPrev" data-i18n-title="prevMatch" title="上一个匹配">↑</button>
+            <button class="fb-btn" id="findNext" data-i18n-title="nextMatch" title="下一个匹配">↓</button>
+            <label class="fb-chk" data-i18n-title="case" title="区分大小写"><input type="checkbox" id="findCase"><span>Aa</span></label>
+            <label class="fb-chk" data-i18n-title="wholeWord" title="全词"><input type="checkbox" id="findWord"><span>ab</span></label>
+            <label class="fb-chk" data-i18n-title="regex" title="正则"><input type="checkbox" id="findRe"><span>.*</span></label>
+            <button class="fb-btn" id="findTogRep" data-i18n-title="toggleReplace" title="替换">▾</button>
+            <button class="fb-btn" id="findClose" data-i18n-title="close" title="关闭">×</button>
+          </div>
+          <div class="find-row hidden" id="findRepRow">
+            <input id="findRepInput" data-i18n-ph="replacePh" placeholder="替换为" spellcheck="false" autocomplete="off">
+            <button class="fb-btn" id="findRepOne" data-i18n="replaceOne">替换</button>
+            <button class="fb-btn" id="findRepAll" data-i18n="replaceAll">全部替换</button>
+          </div>
+        </div>
+        <button class="pv-btn" id="pvBtn" data-i18n="preview">预览</button>
+        <div class="preview" id="preview"></div>
+      </div>
+
+      <div class="resize-handle" id="handle"></div>
+
+      <div class="terminal hidden" id="terminal">
+        <div class="panel-head">
+          <div class="panel-tabs">
+            <button class="panel-tab" id="panelProb" data-panel="prob" data-i18n="problems">问题</button>
+          <button class="panel-tab" id="panelOut" data-panel="out" data-i18n="output">输出</button>
+          <button class="panel-tab" id="panelDbg" data-panel="dbg" data-i18n="dbg">调试</button>
+            <button class="panel-tab on" id="panelTerm" data-panel="term" data-i18n="terminal">终端</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="term-tools" id="termTools">
+            <button class="term-clear" id="termClear" data-i18n="clear">清空</button>
+            <div class="term-list" id="termTabs"></div>
+          </div>
+        </div>
+        <div class="panel-term">
+          <div class="term-bodies" id="termBodies"></div>
+        </div>
+        <div class="panel-prob hidden" id="panelProbBox">
+          <div class="prob-head">
+            <div class="prob-tabs" id="probTabs">
+              <button class="prob-tab" id="probCurrent" data-k="cur" data-i18n="probCurrent">当前文件</button>
+              <button class="prob-tab on" id="probWorkspace" data-k="ws" data-i18n="probWorkspace">工作区</button>
+            </div>
+            <div class="spacer"></div>
+            <button class="term-clear" id="probScan" data-i18n="probScan">扫描</button>
+          </div>
+          <div class="prob-list" id="probList"></div>
+        </div>
+        <div class="panel-out hidden" id="panelOutBox">
+          <div class="out-head">
+            <div class="spacer"></div>
+            <button class="term-clear" id="outClear" data-i18n="clear">清空</button>
+          </div>
+          <div class="out-body" id="outBody"></div>
+        </div>
+        <div class="panel-dbg hidden" id="panelDbgBox">
+          <div class="dbg-pane">
+            <div class="dbg-col">
+              <div class="dbg-col-h" data-i18n="dbgStack">调用栈</div>
+              <div class="dbg-col-b" id="dbgStack"></div>
+            </div>
+            <div class="dbg-col">
+              <div class="dbg-col-h" data-i18n="dbgVars">变量</div>
+              <div class="dbg-col-b" id="dbgVars"></div>
+            </div>
+          </div>
+          <div class="dbg-console">
+            <div class="dbg-col-h" data-i18n="dbgConsole">调试控制台</div>
+            <div class="dbg-out" id="dbgOut"></div>
+            <div class="dbg-repl-row">
+              <span class="dbg-prompt">&gt;</span>
+              <input class="dbg-repl" id="dbgRepl" data-i18n-ph="dbgConsolePh" placeholder="在此输入表达式（回车求值）" spellcheck="false" autocomplete="off">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <aside class="chat hidden" id="chat">
+      <div class="chat-h" id="chatH"></div>
+      <div class="chat-head">
+        <button class="chat-tool" id="chatNew" data-i18n="newChat">新建会话</button>
+        <button class="chat-tool" id="chatHistory" data-i18n="history">历史会话</button>
+        <button class="chat-tool x" id="chatClose" data-i18n-title="close" title="关闭">×</button>
+      </div>
+      <div class="chat-hist hidden" id="chatHistList"></div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="ask-box hidden" id="askBox">
+        <div class="ask-title" id="askTitle"></div>
+        <div class="ask-body" id="askBody"></div>
+        <div class="ask-btns"><button class="ask-btn" id="askOk" data-i18n="ok">确定</button></div>
+      </div>
+      <div class="chat-input">
+        <div class="chat-imgs" id="chatImgs"></div>
+        <textarea id="chatText" data-i18n-ph="chatPh" placeholder="输入问题，Enter 发送，Shift+Enter 换行" spellcheck="false"></textarea>
+        <div class="chat-row">
+          <button class="chat-up" id="chatUp" data-i18n-title="attach" title="上传文件">+</button>
+          <span class="chat-hint" id="chatHint"></span>
+          <select class="chat-model" id="chatModel" title="选择模型"></select>
+          <button class="chat-send" id="chatSend" data-i18n="send">发送</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="statusbar">
+    <div class="item" id="stRoot">未打开文件夹</div>
+    <div class="grow"></div>
+    <div class="item" id="stPos">Ln 1, Col 1</div>
+    <div class="item">UTF-8</div>
+    <div class="item" id="stLang">Plain Text</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="tick">✓</span><span id="toastMsg"></span></div>
+
+<div class="ctx" id="ctx">
+  <div class="ctx-item" data-a="newf" data-i18n="newFile">新建文件</div>
+  <div class="ctx-item" data-a="newd" data-i18n="newFolder">新建文件夹</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" data-a="refresh" data-i18n="refresh">刷新</div>
+</div>
+
+<div class="ctx" id="fileMenu">
+  <div class="ctx-item" data-f="newf" data-i18n="newFile">新建文件</div>
+  <div class="ctx-item" data-f="neww" data-i18n="newWindow">新建窗口</div>
+  <div class="ctx-item" data-f="newp" data-i18n="newProject">新建项目</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" data-f="openf" data-i18n="openFile">打开文件</div>
+  <div class="ctx-item" data-f="opend" data-i18n="openFolder">打开文件夹</div>
+</div>
+
+<div class="ctx" id="runMenu">
+  <div class="ctx-item" data-r="compile" data-i18n="runCompile">编译</div>
+  <div class="ctx-item" data-r="buildrun" data-i18n="runBuildRun">编译并运行</div>
+  <div class="ctx-item" data-r="run" data-i18n="runDirect">直接运行</div>
+  <div class="ctx-item" data-r="runargs" data-i18n="runArgs">带参数运行</div>
+  <div class="ctx-item" data-r="admin" data-i18n="runAdmin">以管理员身份运行</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" data-r="debug" data-i18n="dbgStart">调试</div>
+</div>
+
+<div class="ctx" id="edMenu">
+  <div class="ctx-item" data-e="undo" data-i18n="undo">撤销</div>
+  <div class="ctx-item" data-e="redo" data-i18n="redo">重做</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" data-e="cut" data-i18n="cut">剪切</div>
+  <div class="ctx-item" data-e="copy" data-i18n="copy">复制</div>
+  <div class="ctx-item" data-e="paste" data-i18n="paste">粘贴</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" data-e="all" data-i18n="selectAll">全选</div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="dlg">
+    <div class="dlg-title" id="dlgTitle">新建文件</div>
+    <input id="dlgInput" spellcheck="false" autocomplete="off">
+    <div class="dlg-btns">
+      <button id="dlgCancel" data-i18n="cancel">取消</button>
+      <button class="ok" id="dlgOk" data-i18n="ok">确定</button>
+    </div>
+  </div>
+</div>
+
+<div class="palette-mask" id="paletteMask">
+  <div class="palette">
+    <input id="paletteInput" data-i18n-ph="cmdPh" placeholder="输入命令…">
+    <div class="palette-list" id="paletteList"></div>
+  </div>
+</div>
+
+<div class="mask" id="setMask">
+  <div class="dlg set">
+    <div class="dlg-title" data-i18n="setTitle">设置</div>
+    <div class="set-body">
+      <div class="set-nav" id="setNav">
+        <div class="set-nav-item on" data-p="general" data-i18n="navGeneral">通用</div>
+        <div class="set-nav-item" data-p="look" data-i18n="navLook">外观</div>
+        <div class="set-nav-item" data-p="editor" data-i18n="navEditor">编辑器</div>
+        <div class="set-nav-item" data-p="ai" data-i18n="navAi">AI</div>
+        <div class="set-nav-item" data-p="run" data-i18n="navRun">运行环境</div>
+        <div class="set-nav-item" data-p="res" data-i18n="navRes">资源</div>
+        <div class="set-nav-item" data-p="about" data-i18n="navAbout">关于</div>
+      </div>
+      <div class="set-panes">
+
+        <div class="set-pane on" data-p="general">
+          <div class="set-group" data-i18n="resLangGroup">语言与翻译</div>
+          <label data-i18n="resLang">界面语言</label>
+          <select id="setLang"></select>
+          <label data-i18n="resTrans">翻译包（每行 语言:链接）</label>
+          <textarea id="resTrans" spellcheck="false" placeholder="ja:https://example.com/ja.json"></textarea>
+          <button class="set-add" id="impTrans" data-i18n="resImport">导入本地文件</button>
+          <div class="set-tip" data-i18n="resTip">内置简体中文与英语，其余语言填 语言:链接 后选择即可联网拉取，翻译文件为 JSON 键值对</div>
+        </div>
+
+        <div class="set-pane" data-p="ai">
+          <div class="set-group" data-i18n="navModel">模型</div>
+          <div id="mdlList"></div>
+          <button class="set-add" id="mdlAdd" data-i18n="addModel">添加模型</button>
+          <div class="set-tip" data-i18n="modelTip">每条模型可单独配地址与 Key，名称同时作为请求里的模型 ID</div>
+          <div class="set-group" data-i18n="aiPrompt">系统提示词</div>
+          <textarea id="setPrompt" spellcheck="false"></textarea>
+          <div class="set-group" data-i18n="aiParams">模型参数</div>
+          <div class="set-pair">
+            <div>
+              <label data-i18n="aiTemp">温度（0-2）</label>
+              <input id="setTemp" type="number" min="0" max="2" step="0.1" placeholder="默认">
+            </div>
+            <div>
+              <label data-i18n="aiMaxTok">最大回复长度</label>
+              <input id="setMaxTok" type="number" min="1" step="1" placeholder="默认">
+            </div>
+          </div>
+          <label data-i18n="aiExtra">其它参数（JSON）</label>
+          <textarea id="setExtra" spellcheck="false" placeholder='{"top_p":0.9,"seed":42}'></textarea>
+          <div class="set-tip" data-i18n="aiExtraTip">按 JSON 对象合并进请求体，可填 top_p、presence_penalty、frequency_penalty、stop、seed、response_format、tool_choice 等任意 OpenAI 参数，留空则不发送</div>
+          <div class="set-group" data-i18n="aiCtx">上下文</div>
+          <label class="chk"><input type="checkbox" id="setHistory"><span data-i18n="aiHistory">发送时携带往期对话</span></label>
+          <div class="set-group" data-i18n="memTitle">长期记忆</div>
+          <div class="mem-list" id="memList"></div>
+          <div class="mem-edit hidden" id="memEdit">
+            <input class="mem-name" id="memName" spellcheck="false" autocomplete="off" data-i18n-ph="memNamePh" placeholder="名称（仅 ASCII）">
+            <textarea class="mem-text" id="memText" spellcheck="false" data-i18n-ph="memTextPh" placeholder="记忆内容"></textarea>
+            <div class="mem-btns">
+              <button class="mem-del" id="memDel" data-i18n="del">删除</button>
+              <div class="spacer"></div>
+              <button class="mem-cancel" id="memCancel" data-i18n="cancel">取消</button>
+              <button class="mem-save" id="memSave" data-i18n="save">保存</button>
+            </div>
+          </div>
+          <button class="set-add" id="memNew" data-i18n="memNew">新建</button>
+          <div class="set-tip" data-i18n="memTip">名称只能用 ASCII 字母、数字与 . _ -，内容会随对话提供给 AI</div>
+        </div>
+
+        <div class="set-pane" data-p="editor">
+          <div class="set-group" data-i18n="edFont">字体</div>
+          <label data-i18n="edFamily">字体族（CSS font-family）</label>
+          <input id="setFontFamily" spellcheck="false" autocomplete="off">
+          <div class="set-pair">
+            <div>
+              <label data-i18n="edSize">字号（px）</label>
+              <input id="setFont" type="number" min="10" max="20" step="1">
+            </div>
+            <div>
+              <label data-i18n="edTab">Tab 宽度（空格数）</label>
+              <input id="setTab" type="number" min="1" max="8" step="1">
+            </div>
+          </div>
+          <label data-i18n="edUndo">撤销步数</label>
+          <input id="setUndo" type="number" min="10" max="1000" step="10">
+          <div class="set-tip" data-i18n="edTip">留空使用默认等宽字体</div>
+        </div>
+
+        <div class="set-pane" data-p="look">
+          <div class="set-group" data-i18n="lookTheme">主题</div>
+          <label data-i18n="lookScheme">配色</label>
+          <select id="setTheme"></select>
+          <button class="set-add" id="themeImport" data-i18n="themeImport">导入主题</button>
+          <button class="set-add hidden" id="themeDel" data-i18n="themeDel">删除主题</button>
+          <div id="customBox">
+            <div class="set-pair">
+              <div>
+                <label data-i18n="cAccent">主色</label>
+                <input type="color" id="cAccent">
+              </div>
+              <div>
+                <label data-i18n="cSide">副色</label>
+                <input type="color" id="cSide">
+              </div>
+            </div>
+            <div class="set-pair">
+              <div>
+                <label data-i18n="cBg">背景</label>
+                <input type="color" id="cBg">
+              </div>
+              <div>
+                <label data-i18n="cText">文字</label>
+                <input type="color" id="cText">
+              </div>
+            </div>
+            <div class="set-group" data-i18n="lookSyntax">语法高亮</div>
+            <div class="set-pair">
+              <div>
+                <label data-i18n="synKeyword">关键字</label>
+                <input type="color" id="cKeyword">
+              </div>
+              <div>
+                <label data-i18n="synType">类型</label>
+                <input type="color" id="cType">
+              </div>
+            </div>
+            <div class="set-pair">
+              <div>
+                <label data-i18n="synString">字符串</label>
+                <input type="color" id="cString">
+              </div>
+              <div>
+                <label data-i18n="synNumber">数字</label>
+                <input type="color" id="cNumber">
+              </div>
+            </div>
+            <div class="set-pair">
+              <div>
+                <label data-i18n="synComment">注释</label>
+                <input type="color" id="cComment">
+              </div>
+              <div>
+                <label data-i18n="synFunc">函数</label>
+                <input type="color" id="cFunc">
+              </div>
+            </div>
+            <label data-i18n="synErr">错误</label>
+            <input type="color" id="cErr">
+            <div class="set-tip" data-i18n="lookTip">副色作用于侧栏与弹层，其余颜色由这四个色自动推导</div>
+          </div>
+        </div>
+
+        <div class="set-pane" data-p="run">
+          <div class="set-group" data-i18n="runGroup">默认运行时</div>
+          <div id="runList"></div>
+          <button class="set-add" id="runScan" data-i18n="runScan">重新扫描</button>
+          <div class="set-group" data-i18n="setShell">终端外壳</div>
+          <select id="setShell"></select>
+          <input id="setShellCmd" class="hidden" spellcheck="false" autocomplete="off" data-i18n-ph="shellCmdPh" placeholder="完整启动命令行">
+          <div class="set-tip" data-i18n="shellTip">选择终端类型；选自定义时填完整启动命令行</div>
+          <div class="set-group" data-i18n="lspGroup">语言服务器</div>
+          <div class="set-tip" data-i18n="lspTip"></div>
+          <div id="lspList"></div>
+          <div class="set-group" data-i18n="dbgGroup">调试器</div>
+          <div class="set-tip" data-i18n="dbgTip"></div>
+          <div id="dbgList"></div>
+        </div>
+
+        <div class="set-pane" data-p="res">
+          <div class="set-group" data-i18n="resGroup">在线资源</div>
+          <div class="set-tip" data-i18n="resMoreTip"></div>
+          <div id="resList"></div>
+          <button class="set-add" id="resUpdate" data-i18n="resUpdate">资源更新</button>
+          <div class="set-tip" data-i18n="resUpdateTip"></div>
+        </div>
+
+        <div class="set-pane" data-p="about">
+          <div class="about-name">MiniIDE<span class="about-ver" id="aboutVer"></span></div>
+          <div class="about-desc" data-i18n="aboutDesc">轻量代码编辑器</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="dlg-btns">
+      <button class="ok" id="setClose" data-i18n="close">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="mask" id="npMask">
+  <div class="dlg set">
+    <div class="dlg-title" data-i18n="newProject">新建项目</div>
+    <label data-i18n="npLang">语言</label>
+    <select id="npLang"></select>
+    <label data-i18n="npTmpl">模板</label>
+    <select id="npTmpl"></select>
+    <div class="set-group" data-i18n="npDir">位置</div>
+    <div class="set-pair">
+      <div><input id="npDir" spellcheck="false" autocomplete="off" readonly></div>
+      <button class="set-add" id="npPick" data-i18n="npPick">选择</button>
+    </div>
+    <label data-i18n="npName">项目名</label>
+    <input id="npName" spellcheck="false" autocomplete="off">
+    <div class="dlg-btns">
+      <button id="npCancel" data-i18n="cancel">取消</button>
+      <button class="ok" id="npOk" data-i18n="create">创建</button>
+    </div>
+  </div>
+</div>
+
+<div class="mask" id="openMask">
+  <div class="dlg">
+    <div class="dlg-title" data-i18n="openTextTitle">文本方式打开</div>
+    <div class="open-msg" id="openMsg"></div>
+    <div class="dlg-btns">
+      <button id="openCancel" data-i18n="cancel">取消</button>
+      <button class="ok" id="openGo" data-i18n="openAsText">继续使用文本编辑器预览</button>
+    </div>
+  </div>
+</div>
+
+<script>/*__RES__*/</script>
+<script>/*__APP__*/</script>
+</body>
+</html>
